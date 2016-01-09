@@ -1,36 +1,38 @@
 'use strict';
 var http = require('http-request');
-var image = {
-  load: function() {
-    let options = {
-      url: 'http://localhost/foo.pdf'
-    };
-    // The resolver function is called with the ability to resolve or
-    // reject the promise
-    let promise = new Promise(function(resolve, reject) {
-      http.get({
-        url: url,
-        progress: function(current, total) {
-          console.log('Downloaded %d bytes from %d', current, total);
-        },
-        function(err, res) {
-          if (err) {
-            reject(err);
-            return promise;
-          }
-          resolve(res.buffer);
-          return promise;
-        }
-      });
+
+function imgLoad(url) {
+  return new Promise(function(resolve, reject) {
+    http.get(url, 'image.jpg', function(err, res) {
+      if(err) {
+        reject(err);
+      } else {
+        resolve(res.file);
+      }
+      // console.log(res.code, res.headers, res.buffer.toString());
     });
-    // Adapter pattern
-  },
-  'get': function(url) {
-    return image.load(url);
-  }
+  });
 };
-image()
-  .get('https://wallpaperscraft.com/image/munich_city_skyline_59206_2560x1024.jpg')
-  .then(console.log('Image: %d', data.toString()))
-  .catch(console.log('Error: %d', data));
-// https://wallpaperscraft.com/image/munich_city_skyline_59206_2560x1024.jpg
+imgLoad('https://wallpaperscraft.com/image/munich_city_skyline_59206_2560x1024.jpg').then(function(data) {
+  console.log('Data: %s', data);
+}).catch(function(data) {
+  console.log('Error: %s', data);
+});
+
+function* idMaker(url) {
+  yield* http.get(url, 'image2.jpg', function(err, res) {
+    if(err) {
+      return false;
+    } else {
+      return true;
+    }
+    // console.log(res.code, res.headers, res.buffer.toString());
+  });
+};
+var gen = idMaker('https://wallpaperscraft.com/image/munich_city_skyline_59206_2560x1024.jpg');
+setTimeout(function() {
+  console.log(gen.next());
+  setTimeout(function() {
+    console.log(gen.next());
+  }, 5000);
+}, 5000);

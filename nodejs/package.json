@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "mats.becker@gmail.com",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "http-request": "^0.7.0"
+  }
 }

@@ -78,7 +78,7 @@ console.log(iterator.next()); // { value: undefined, done: true }
 class Classroom {
   constructor() {
     var args = Array.prototype.slice.call(arguments, Classroom.length);
-    //this.students = students;
+    this.students = args;
   }
   *[Symbol.iterator]() {
     for(let s of this.students) {
@@ -91,4 +91,3 @@ var students = [];
 for(let student of scienceClass) {
   students.push(student);
 }
-expect(students).toEqual(['Tim', 'Sue', 'Joy'])
